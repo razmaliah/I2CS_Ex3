@@ -5,6 +5,7 @@ import exe.ex3.game.PacManAlgo;
 import exe.ex3.game.PacmanGame;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * This is the major algorithmic class for Ex3 - the PacMan game:
@@ -17,6 +18,9 @@ public class Ex3Algo implements PacManAlgo {
     private static final int OBS_VALUE = 1;
     private static final int FOOD_VALUE = 3;
     private static final int POWER_VALUE = 5;
+    private static Index2D _pacPos = null;
+    private static Pixel2D[] _ghostsPos = null;
+    private static boolean _isEatable = false;
 
     public Ex3Algo() {
         _count = 0;
@@ -46,17 +50,18 @@ public class Ex3Algo implements PacManAlgo {
             System.out.println("Blue=" + blue + ", Pink=" + pink + ", Black=" + black + ", Green=" + green);
             String pos = game.getPos(code).toString();
             System.out.println("Pacman coordinate: " + pos);
-            System.out.println("Pacman pixel position: " + intPos(game));
             GhostCL[] ghosts = game.getGhosts(code);
             printGhosts(ghosts);
             int up = Game.UP, left = Game.LEFT, down = Game.DOWN, right = Game.RIGHT;
         }
         _count++;
         Pixel2D[] cPP = closestPP(game);
-        Pixel2D start = intPos(game);
+        updatePac(game);
+        updateGhosts(game);
+        Pixel2D start = _pacPos;
         Pixel2D next = cPP[1];
         int dir = getDir(start,next);
-        System.out.println("dir: " + dir + " steps:" + _count + " next: " + next);
+        updateGhosts(game);
         return dir;
     }
 
@@ -88,7 +93,8 @@ public class Ex3Algo implements PacManAlgo {
     private static Pixel2D[] closestPP(PacmanGame game) {
         Pixel2D[] ans = null;
         int[][] arr2D = game.getGame(0);
-        Index2D pacPos = intPos(game);
+        updatePac(game);
+        Index2D pacPos = _pacPos;
         Map board = new Map(arr2D);
         Map2D allD = board.allDistance(pacPos, OBS_VALUE);
         Pixel2D target = closestFood(board, allD);
@@ -97,12 +103,12 @@ public class Ex3Algo implements PacManAlgo {
     }
 
 
-    private static Index2D intPos(PacmanGame game) {
+    private static void updatePac(PacmanGame game) {
         String pos = game.getPos(1);
         int x = Integer.parseInt(pos.split(",")[0]);
         int y = Integer.parseInt(pos.split(",")[1]);
         Index2D p1 = new Index2D(x, y);
-        return p1;
+        _pacPos = p1;
     }
 
     private static Index2D closestFood(Map2D board, Map2D allD) {
@@ -126,4 +132,48 @@ public class Ex3Algo implements PacManAlgo {
         if(next.getY() + 1 == start.getY() || next.getY() - start.getY() > 1){return Game.DOWN;}
         return Game.UP;
     }
+
+    private static void updateGhosts(PacmanGame game) {
+        GhostCL[] ghosts = game.getGhosts(0);
+        Pixel2D[] ghostPositions = new Pixel2D[ghosts.length];
+        for (int i = 0; i < ghosts.length; i++) {
+            ghostPositions[i] = ghostPos(ghosts[i]);
+        }
+        _ghostsPos = ghostPositions;
+        double eat = game.getGhosts(1)[1].remainTimeAsEatable(0);
+        if(eat > 0){_isEatable = true;}
+        else{_isEatable = false;}
+    }
+
+    private static Index2D ghostPos (GhostCL g){
+        String pos = g.getPos(1);
+        int x = Integer.parseInt(pos.split(",")[0]);
+        int y = Integer.parseInt(pos.split(",")[1]);
+        Index2D p1 = new Index2D(x, y);
+        return p1;
+    }
+
+    private static int[] ghostDist(PacmanGame game){
+        int[] dists = new int[_ghostsPos.length];
+        int[][] arr2D = game.getGame(0);
+        Index2D pacPos = _pacPos;
+        Map board = new Map(arr2D);
+        Map2D allD = board.allDistance(pacPos, OBS_VALUE);
+        for (int i = 0; i < _ghostsPos.length; i++) {
+            Pixel2D gPos = _ghostsPos[i];
+            dists[i] = allD.getPixel(gPos);
+        }
+        return dists;
+    }
+
+    private static int indexClosestGhost(int[] dists){
+        int ans = dists[0];
+        for (int i = 1; i < dists.length; i++) {
+            if (dists[i] < ans) {
+                ans = i;
+            }
+        }
+        return ans;
+    }
+
 }
