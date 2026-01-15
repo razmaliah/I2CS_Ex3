@@ -15,10 +15,10 @@ import java.util.ArrayList;
  */
 public class Ex3Algo implements PacManAlgo {
     private int _count;
-    private static final int OBS_VALUE = 1;
-    private static final int FOOD_VALUE = 3;
+    public static final int OBS_VALUE = 1;
+    public static final int FOOD_VALUE = 3;
     private static final int POWER_VALUE = 5;
-    private static Index2D _pacPos = null;
+    public static Index2D _pacPos = null;
     private static Pixel2D[] _ghostsPos = null;
     private static boolean _isEatable = false;
 
@@ -90,7 +90,7 @@ public class Ex3Algo implements PacManAlgo {
 
     ///  ///////////////////////////////////// My private methods  /////////////////////////////////////
 
-    private static Pixel2D[] closestPP(PacmanGame game) {
+    public static Pixel2D[] closestPP(PacmanGame game) {
         Pixel2D[] ans = null;
         int[][] arr2D = game.getGame(0);
         updatePac(game);
@@ -103,7 +103,7 @@ public class Ex3Algo implements PacManAlgo {
     }
 
 
-    private static void updatePac(PacmanGame game) {
+    public static void updatePac(PacmanGame game) {
         String pos = game.getPos(1);
         int x = Integer.parseInt(pos.split(",")[0]);
         int y = Integer.parseInt(pos.split(",")[1]);
@@ -111,7 +111,7 @@ public class Ex3Algo implements PacManAlgo {
         _pacPos = p1;
     }
 
-    private static Index2D closestFood(Map2D board, Map2D allD) {
+    public static Index2D closestFood(Map2D board, Map2D allD) {
         Index2D ans = new Index2D(0,0);
         allD.setPixel(ans,1000); // set an obstacle to large value
         for (int i = 0; i < board.getWidth(); i++) {
@@ -125,7 +125,7 @@ public class Ex3Algo implements PacManAlgo {
         return ans;
     }
 
-    private static int getDir(Pixel2D start, Pixel2D next) {
+    public static int getDir(Pixel2D start, Pixel2D next) {
         if(next.getX() == start.getX() + 1 || start.getX() - next.getX() > 1){return Game.RIGHT;}
         if(next.getX() + 1 == start.getX() || next.getX() - start.getX() > 1){return Game.LEFT;}
         if(next.getY() == start.getY() + 1 || start.getY() - next.getY() > 1){return Game.UP;}
