@@ -3,6 +3,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 /**
  * This class represents a 2D map (int[w][h]) as a "screen" or a raster matrix or maze over integers.
@@ -373,6 +376,8 @@ public class Map implements Map2D, Serializable{
      * @param p the pixel to mark his neighbors
      * @return the number of changed pixels
      */
+
+    /**
     private int markNeighbors(Pixel2D p){
         int howManyMarked =0;
         Pixel2D up = new Index2D(p.getX(), p.getY()-1);
@@ -403,12 +408,36 @@ public class Map implements Map2D, Serializable{
         }
         return howManyMarked;
     }
+     **/
+
+    private int markNeighbors(Pixel2D p) {
+        int howManyMarked = 0;
+        int myValue = this.getPixel(p);
+        Pixel2D[] neighbors = getAllPotentialNeighbors(p);
+
+        for (Pixel2D next : neighbors) {
+            if (isInside(next)) {
+                int nextVal = this.getPixel(next);
+                // אם הפיקסל ריק (-1) או שמצאנו דרך קצרה יותר אליו
+                if (nextVal == -1 || nextVal > myValue + 1) {
+                    this.setPixel(next, myValue + 1);
+                    howManyMarked++;
+                }
+            }
+        }
+        return howManyMarked;
+    }
 
     /**
      * this recursive function mark all valid color pixels (none obstacles) to be the lowest number of steps from start pixel
      * @param start the start pixel to count steps from
      * @param target the target pixel for the path
      */
+
+
+
+
+    /**
     private void markSteps(Pixel2D start,Pixel2D target){
         if(!isInside(start) || !isInside(target)){return;}
         if(start.equals(target)){return;}
@@ -439,6 +468,10 @@ public class Map implements Map2D, Serializable{
             markSteps(right, target);
         }
     }
+
+
+
+**/
 
     /**
      * this function reverse the steps from target and return the neighbor pixel the has target value -1 (represent the steps)
@@ -479,6 +512,65 @@ public class Map implements Map2D, Serializable{
         }
         return ans;
     }
+
+    //////////////////////////////////////////////////////////////
+
+
+
+    private void markSteps(Pixel2D start, Pixel2D target) {
+        if (!isInside(start) || !isInside(target)) return;
+
+        // תור לניהול הפיקסלים שצריך לבקר בהם
+        Queue<Pixel2D> queue = new LinkedList<>();
+        queue.add(start);
+
+        // לולאה שרצה כל עוד יש פיקסלים בתור
+        while (!queue.isEmpty()) {
+            Pixel2D current = queue.poll();
+
+            // אם הגענו ליעד, אנחנו לא צריכים לסמן את השכנים שלו
+            if (current.equals(target)) continue;
+
+            // 1. קורא לפונקציה שלך שמסמנת את השכנים במפה ומחזירה כמה סומנו
+            int howMany = markNeighbors(current);
+
+            // 2. אם לא סומן אף שכן, אין טעם להמשיך מהנקודה הזו
+            if (howMany == 0) continue;
+
+            // 3. מוסיפים את השכנים הרלוונטיים לתור להמשך סריקה
+            // אנחנו בודקים אילו מהשכנים קיבלו עכשיו את הערך current+1
+            Pixel2D[] neighbors = getAllPotentialNeighbors(current);
+            for (Pixel2D next : neighbors) {
+                if (isInside(next) && getPixel(next) == getPixel(current) + 1) {
+                    // הוספה לתור מבטיחה שהם יטופלו בהמשך, אבל לא "עכשיו" בתוך רקורסיה
+                    queue.add(next);
+                }
+            }
+        }
+    }
+
+    // פונקציית עזר שמרכזת את יצירת השכנים (כולל הלוגיקה הציקלית שלך)
+    private Pixel2D[] getAllPotentialNeighbors(Pixel2D p) {
+        int x = p.getX(), y = p.getY();
+        int w = getWidth(), h = getHeight();
+
+        Pixel2D up = new Index2D(x, y - 1);
+        Pixel2D down = new Index2D(x, y + 1);
+        Pixel2D left = new Index2D(x - 1, y);
+        Pixel2D right = new Index2D(x + 1, y);
+
+        if (this._cyclicFlag) {
+            if (up.getY() < 0) up = new Index2D(x, h - 1);
+            if (down.getY() >= h) down = new Index2D(x, 0);
+            if (left.getX() < 0) left = new Index2D(w - 1, y);
+            if (right.getX() >= w) right = new Index2D(0, y);
+        }
+        return new Pixel2D[]{up, down, left, right};
+    }
+
+
+                            //////////////////////////////////////////////////////////////
+
 
     /**
      * print the map

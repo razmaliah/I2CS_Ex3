@@ -22,7 +22,7 @@ public class Ex3Algo implements PacManAlgo {
     public static Index2D _pacPos = null;
     public static Pixel2D[] _ghostsPos = null;
     public static boolean _isEatable = false;
-    private static final int CLOSE_GHOST_DIST = 2;
+    private static final int CLOSE_GHOST_DIST = 8;
     public static Pixel2D[] _greenDots = {new Index2D(3,5), new Index2D(3,18), new Index2D(19,5), new Index2D(19,18)};
 
     public Ex3Algo() {
@@ -174,33 +174,34 @@ public class Ex3Algo implements PacManAlgo {
         return p1;
     }
 
-    public static int[] ghostDist(){
+    public static int[] ghostDist() {
         updateMap();
         updateGhosts();
         updatePac();
+
         int[] dists = new int[_ghostsPos.length];
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         for (int i = 0; i < _ghostsPos.length; i++) {
             Pixel2D gPos = _ghostsPos[i];
-            int val = distToClosestGhost(ghostDist());
-            if (val < 1){
+            int distFromPac = allD.getPixel(gPos);
+            if (distFromPac < 1) {
                 dists[i] = 100;
-            }
-            else{
-                dists[i] = allD.getPixel(gPos);
+            } else {
+                dists[i] = distFromPac;
             }
         }
         return dists;
     }
 
-    public static int indexClosestGhost(int[] dists){
-        int ans = 0;
+    public static int indexClosestGhost(int[] dists) {
+        if (dists == null || dists.length == 0) return -1;
+        int minIndex = 0;
         for (int i = 1; i < dists.length; i++) {
-            if (dists[i] < ans) {
-                ans = i;
+            if (dists[i] < dists[minIndex]) {
+                minIndex = i;
             }
         }
-        return ans;
+        return minIndex;
     }
 
     public static int distToClosestGhost(int[] dists){
