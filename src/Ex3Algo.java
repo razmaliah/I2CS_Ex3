@@ -73,7 +73,7 @@ public class Ex3Algo implements PacManAlgo {
                    return dirToClosestGreenDot();
                }
                else{
-                   return run();
+                   return dirToRun();
                }
             }
         }
@@ -215,6 +215,9 @@ public class Ex3Algo implements PacManAlgo {
         updateMap();
         int ind = indexClosestGhost(ghostDist());
         Pixel2D target = _ghostsPos[ind];
+        if(target.getX()>8 && target.getX()<14 && target.getY()>10 && target.getY()<13){
+           return dirToRun();
+        }
         Pixel2D start = _pacPos;
         Pixel2D[] SP = _map.shortestPath(start, target, OBS_VALUE);
         target = SP[1];
@@ -273,6 +276,8 @@ public class Ex3Algo implements PacManAlgo {
         updateMap(_game);
     }
 
+
+
     public static int run() {
         updatePac();
         updateGhosts();
@@ -297,6 +302,7 @@ public class Ex3Algo implements PacManAlgo {
         }
         return randomDir();
     }
+
 
     private static int runToRight () {
         updatePac();
@@ -342,4 +348,62 @@ public class Ex3Algo implements PacManAlgo {
         return Game.DOWN;
     }
 
+    public static Map2D combainedGhostDistMaps() {
+        updateMap();
+        updateGhosts();
+        updatePac();
+
+        Map2D[] Maps = new Map2D[_ghostsPos.length];
+        for (int i = 0; i < _ghostsPos.length; i++) {
+            Maps[i] = _map.allDistance(_ghostsPos[i], OBS_VALUE);
+        }
+        Map2D combinedMap = new Map(_map.getWidth(), _map.getHeight(), 0);
+        for (int i = 0; i < _map.getWidth(); i++) {
+            for (int j = 0; j < _map.getHeight(); j++) {
+                Pixel2D p = new Index2D(i, j);
+                int minDist = 100;
+                for (int k = 0; k < Maps.length; k++) {
+                    int d = Maps[k].getPixel(p);
+                    if (d < minDist) {
+                        minDist = d;
+                    }
+                }
+                combinedMap.setPixel(p, minDist);
+            }
+        }
+        return combinedMap;
+    }
+
+    public static int dirToRun(){
+        updateMap();
+        updatePac();
+        updateGhosts();
+        int dirAns;
+        Map2D combinedMap = combainedGhostDistMaps();
+        Pixel2D start = _pacPos;
+        int myDist = combinedMap.getPixel(start);
+        Pixel2D pRight = new Index2D(start.getX() + 1, start.getY());
+        Pixel2D pLeft = new Index2D(start.getX() - 1, start.getY());
+        Pixel2D pUp = new Index2D(start.getX(), start.getY() + 1);
+        Pixel2D pDown = new Index2D(start.getX(), start.getY() - 1);
+        if(pRight.getX() == _map.getWidth()){pRight = new Index2D(0, start.getY());}
+        if(pLeft.getX() < 0){pLeft = new Index2D(_map.getWidth() - 1, start.getY());}
+
+        if(combinedMap.getPixel(pRight) > myDist){
+            dirAns = Game.RIGHT;
+        }
+        else if(combinedMap.getPixel(pLeft) > myDist){
+            dirAns = Game.LEFT;
+        }
+        else if(combinedMap.getPixel(pUp) > myDist){
+            dirAns = Game.UP;
+        }
+        else if(combinedMap.getPixel(pDown) > myDist){
+            dirAns = Game.DOWN;
+        }
+        else{
+            dirAns = randomDir();
+        }
+        return dirAns;
+    }
 }

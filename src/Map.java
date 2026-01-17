@@ -325,7 +325,33 @@ public class Map implements Map2D, Serializable{
      * @param obsColor the color representing obstacles
      * @return a new map with all the shortest path distances from the starting pixel to each entry in this map.
      */
+
     @Override
+
+    public Map2D allDistance(Pixel2D start, int obsColor) {
+        if (start == null || !isInside(start)){ return null;}
+        Map ans = new Map(this.getMap());
+        ans.resetMap(obsColor);
+        ans.setPixel(start, 0);
+        Queue<Pixel2D> queue = new LinkedList<>();
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            Pixel2D current = queue.poll();
+            int dist = ans.getPixel(current);
+            Pixel2D[] neighbors = getAllPotentialNeighbors(current);
+            for (int i=0;i<neighbors.length;i++){
+                Pixel2D next = neighbors[i];
+                if (ans.isInside(next) && ans.getPixel(next) == -1) {
+                    ans.setPixel(next, dist + 1);
+                    queue.add(next);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
     public Map2D allDistance(Pixel2D start, int obsColor) {
         Map ans = null;
         if (start == null || !isInside(start)){return ans;}
@@ -346,6 +372,7 @@ public class Map implements Map2D, Serializable{
         }
         return ans;
     }
+    **/
 
     ////////////////////// Private Methods ///////////////////////
 
@@ -414,11 +441,10 @@ public class Map implements Map2D, Serializable{
         int howManyMarked = 0;
         int myValue = this.getPixel(p);
         Pixel2D[] neighbors = getAllPotentialNeighbors(p);
-
-        for (Pixel2D next : neighbors) {
+        for (int i = 0; i< neighbors.length; i++) {
+            Pixel2D next = neighbors[i];
             if (isInside(next)) {
                 int nextVal = this.getPixel(next);
-                // אם הפיקסל ריק (-1) או שמצאנו דרך קצרה יותר אליו
                 if (nextVal == -1 || nextVal > myValue + 1) {
                     this.setPixel(next, myValue + 1);
                     howManyMarked++;
@@ -519,53 +545,39 @@ public class Map implements Map2D, Serializable{
 
     private void markSteps(Pixel2D start, Pixel2D target) {
         if (!isInside(start) || !isInside(target)) return;
-
-        // תור לניהול הפיקסלים שצריך לבקר בהם
         Queue<Pixel2D> queue = new LinkedList<>();
         queue.add(start);
-
-        // לולאה שרצה כל עוד יש פיקסלים בתור
         while (!queue.isEmpty()) {
             Pixel2D current = queue.poll();
-
-            // אם הגענו ליעד, אנחנו לא צריכים לסמן את השכנים שלו
             if (current.equals(target)) continue;
-
-            // 1. קורא לפונקציה שלך שמסמנת את השכנים במפה ומחזירה כמה סומנו
             int howMany = markNeighbors(current);
-
-            // 2. אם לא סומן אף שכן, אין טעם להמשיך מהנקודה הזו
             if (howMany == 0) continue;
-
-            // 3. מוסיפים את השכנים הרלוונטיים לתור להמשך סריקה
-            // אנחנו בודקים אילו מהשכנים קיבלו עכשיו את הערך current+1
             Pixel2D[] neighbors = getAllPotentialNeighbors(current);
-            for (Pixel2D next : neighbors) {
+            for (int i =0; i<neighbors.length;i++) {
+                Pixel2D next = neighbors[i];
                 if (isInside(next) && getPixel(next) == getPixel(current) + 1) {
-                    // הוספה לתור מבטיחה שהם יטופלו בהמשך, אבל לא "עכשיו" בתוך רקורסיה
                     queue.add(next);
                 }
             }
         }
     }
 
-    // פונקציית עזר שמרכזת את יצירת השכנים (כולל הלוגיקה הציקלית שלך)
     private Pixel2D[] getAllPotentialNeighbors(Pixel2D p) {
-        int x = p.getX(), y = p.getY();
-        int w = getWidth(), h = getHeight();
-
+        Pixel2D[] ans;
+        int x = p.getX();
+        int y = p.getY();
         Pixel2D up = new Index2D(x, y - 1);
         Pixel2D down = new Index2D(x, y + 1);
         Pixel2D left = new Index2D(x - 1, y);
         Pixel2D right = new Index2D(x + 1, y);
-
         if (this._cyclicFlag) {
-            if (up.getY() < 0) up = new Index2D(x, h - 1);
-            if (down.getY() >= h) down = new Index2D(x, 0);
-            if (left.getX() < 0) left = new Index2D(w - 1, y);
-            if (right.getX() >= w) right = new Index2D(0, y);
+            if (up.getY() < 0){up = new Index2D(x, this.getHeight() - 1);}
+            if (down.getY() >= this.getHeight()){ down = new Index2D(x, 0);}
+            if (left.getX() < 0) {left = new Index2D(this.getWidth() - 1, y);}
+            if (right.getX() >= this.getWidth()){ right = new Index2D(0, y);}
         }
-        return new Pixel2D[]{up, down, left, right};
+        ans = new Pixel2D[]{up, down, left, right};
+        return ans;
     }
 
 
