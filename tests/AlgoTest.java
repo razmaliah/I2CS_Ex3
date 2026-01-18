@@ -1,13 +1,10 @@
+import Algo.*;
 import exe.ex3.game.Game;
-import exe.ex3.game.PacmanGame;
-import exe.ex3.game.PacManAlgo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 import java.util.Arrays;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
 
 

@@ -1,3 +1,4 @@
+package Algo;
 
 /**
  * This interface represents a 2D map as a raster matrix or maze.

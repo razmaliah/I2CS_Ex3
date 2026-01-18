@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/libs/Ex3_v09e.jar-out.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libs/Ex3_v09e.jar-out.jar!/" />
+    </SOURCES>
   </library>
 </component>

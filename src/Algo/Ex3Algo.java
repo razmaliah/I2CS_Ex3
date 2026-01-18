@@ -1,3 +1,4 @@
+package Algo;
 
 import exe.ex3.game.Game;
 import exe.ex3.game.GhostCL;
@@ -8,9 +9,6 @@ import java.awt.*;
 
 /**
  * This is the major algorithmic class for Ex3 - the PacMan game:
- *
- * This code is a very simple example (random-walk algorithm).
- * Your task is to implement (here) your PacMan algorithm.
  */
 public class Ex3Algo implements PacManAlgo {
     private int _count;
@@ -22,7 +20,7 @@ public class Ex3Algo implements PacManAlgo {
     public static Index2D _pacPos = null;
     public static Pixel2D[] _ghostsPos = null;
     public static boolean _isEatable = false;
-    private static final int MAX_CLOSE_GHOST_DIST = 8;
+    private static final int MAX_CLOSE_GHOST_DIST = 12;
     public static Pixel2D[] _greenDots = {new Index2D(3,5), new Index2D(3,18), new Index2D(19,5), new Index2D(19,18)};
 
     public Ex3Algo() {
@@ -137,7 +135,7 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     /**
-     * Update Map (game data is updated every move)
+     * Update Algo.Map (game data is updated every move)
      */
     public static void updateMap(){
         if (_game == null){ return; }
@@ -146,7 +144,7 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     /**
-     * Update all data: Pacman position, Ghosts positions and Map
+     * Update all data: Pacman position, Ghosts positions and Algo.Map
      */
     public static void updateAllData(){
         updatePac();
@@ -199,9 +197,9 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     /**
-     * extract ghost position from GhostCL and convert to Index2D
+     * extract ghost position from GhostCL and convert to Algo.Index2D
      * @param g - GhostCL object
-     * @return - ghost position as Index2D
+     * @return - ghost position as Algo.Index2D
      */
     public static Index2D ghostPos (GhostCL g){
         String pos = g.getPos(1);

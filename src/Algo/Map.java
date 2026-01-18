@@ -1,8 +1,6 @@
-
-import org.junit.jupiter.api.Test;
+package Algo;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -149,7 +147,7 @@ public class Map implements Map2D, Serializable{
     }
 
     /**
-     * Set the [x][y] coordinate (Pixel2D) of the map to v.
+     * Set the [x][y] coordinate (Algo.Pixel2D) of the map to v.
      * @param p the coordinate in the map.
      * @param v the value that the entry at the coordinate [p.x][p.y] is set to.
      */
@@ -191,9 +189,9 @@ public class Map implements Map2D, Serializable{
     }
 
     /**
-     * This method returns true if and only if this Map has the same dimensions as p.
+     * This method returns true if and only if this Algo.Map has the same dimensions as p.
      * @param p - other map to compare to.
-     * @return true if this Map has the same dimensions as p.
+     * @return true if this Algo.Map has the same dimensions as p.
      */
 
 
@@ -206,7 +204,7 @@ public class Map implements Map2D, Serializable{
     }
     /**
      * check if this map is equal to another map.
-     * @param ob the reference object with which to compare. if ob is not instance of Map2D return false.
+     * @param ob the reference object with which to compare. if ob is not instance of Algo.Map2D return false.
      * @return true if the maps are equal (same dimensions and same values in all entries).
      */
     @Override
@@ -352,15 +350,15 @@ public class Map implements Map2D, Serializable{
     }
 
     /**
-    public Map2D allDistance(Pixel2D start, int obsColor) {
-        Map ans = null;
+    public Algo.Map2D allDistance(Algo.Pixel2D start, int obsColor) {
+        Algo.Map ans = null;
         if (start == null || !isInside(start)){return ans;}
-        ans = new Map(this.getMap());
+        ans = new Algo.Map(this.getMap());
         ans.resetMap(obsColor);
         ans.setPixel(start, 0);
-        Pixel2D target = new Index2D(ans.getWidth()-1 - start.getX(),ans.getHeight()-1 - start.getY());   // not relevant target, just to use markSteps function
+        Algo.Pixel2D target = new Algo.Index2D(ans.getWidth()-1 - start.getX(),ans.getHeight()-1 - start.getY());   // not relevant target, just to use markSteps function
         if (start.equals(target)){
-            target = new Index2D(0,0);
+            target = new Algo.Index2D(0,0);
         }
         ans.markSteps(start, target);
         for(int i=0;i<ans.getWidth();i++){
@@ -405,16 +403,16 @@ public class Map implements Map2D, Serializable{
      */
 
     /**
-    private int markNeighbors(Pixel2D p){
+    private int markNeighbors(Algo.Pixel2D p){
         int howManyMarked =0;
-        Pixel2D up = new Index2D(p.getX(), p.getY()-1);
-        Pixel2D down = new Index2D(p.getX(), p.getY()+1);
-        Pixel2D left = new Index2D(p.getX()-1, p.getY());
-        Pixel2D right = new Index2D(p.getX()+1, p.getY());
-        if(this._cyclicFlag && up.getY()<0){ up = new Index2D(p.getX(), this.getHeight()-1);}
-        if(this._cyclicFlag && down.getY()>=this.getHeight()) { down = new Index2D(p.getX(), 0);}
-        if(this._cyclicFlag && left.getX()<0){ left = new Index2D(this.getWidth()-1, p.getY());}
-        if(this._cyclicFlag && right.getX()>=this.getWidth()){ right = new Index2D(0, p.getY());}
+        Algo.Pixel2D up = new Algo.Index2D(p.getX(), p.getY()-1);
+        Algo.Pixel2D down = new Algo.Index2D(p.getX(), p.getY()+1);
+        Algo.Pixel2D left = new Algo.Index2D(p.getX()-1, p.getY());
+        Algo.Pixel2D right = new Algo.Index2D(p.getX()+1, p.getY());
+        if(this._cyclicFlag && up.getY()<0){ up = new Algo.Index2D(p.getX(), this.getHeight()-1);}
+        if(this._cyclicFlag && down.getY()>=this.getHeight()) { down = new Algo.Index2D(p.getX(), 0);}
+        if(this._cyclicFlag && left.getX()<0){ left = new Algo.Index2D(this.getWidth()-1, p.getY());}
+        if(this._cyclicFlag && right.getX()>=this.getWidth()){ right = new Algo.Index2D(0, p.getY());}
         int myValue = this.getPixel(p);
 
         if(isInside(up) && (this.getPixel(up) == -1 || this.getPixel(up) > myValue +1)){
@@ -464,22 +462,22 @@ public class Map implements Map2D, Serializable{
 
 
     /**
-    private void markSteps(Pixel2D start,Pixel2D target){
+    private void markSteps(Algo.Pixel2D start,Algo.Pixel2D target){
         if(!isInside(start) || !isInside(target)){return;}
         if(start.equals(target)){return;}
         int howMany = markNeighbors(start);
         if (howMany == 0) {
             return;
         }
-        Pixel2D up = new Index2D(start.getX(), start.getY()-1);
-        Pixel2D down = new Index2D(start.getX(), start.getY()+1);
-        Pixel2D left = new Index2D(start.getX()-1, start.getY());
-        Pixel2D right = new Index2D(start.getX()+1, start.getY());
+        Algo.Pixel2D up = new Algo.Index2D(start.getX(), start.getY()-1);
+        Algo.Pixel2D down = new Algo.Index2D(start.getX(), start.getY()+1);
+        Algo.Pixel2D left = new Algo.Index2D(start.getX()-1, start.getY());
+        Algo.Pixel2D right = new Algo.Index2D(start.getX()+1, start.getY());
 
-        if(this._cyclicFlag && up.getY()<0){up = new Index2D(start.getX(), this.getHeight()-1);}
-        if(this._cyclicFlag && down.getY()>=this.getHeight()) {down = new Index2D(start.getX(), 0);}
-        if(this._cyclicFlag && left.getX()<0){left = new Index2D(this.getWidth()-1, start.getY());}
-        if(this._cyclicFlag && right.getX()>=this.getWidth()){right = new Index2D(0, start.getY());}
+        if(this._cyclicFlag && up.getY()<0){up = new Algo.Index2D(start.getX(), this.getHeight()-1);}
+        if(this._cyclicFlag && down.getY()>=this.getHeight()) {down = new Algo.Index2D(start.getX(), 0);}
+        if(this._cyclicFlag && left.getX()<0){left = new Algo.Index2D(this.getWidth()-1, start.getY());}
+        if(this._cyclicFlag && right.getX()>=this.getWidth()){right = new Algo.Index2D(0, start.getY());}
 
         if (isInside(up) && getPixel(up) == getPixel(start) +1) {
             markSteps(up, target);

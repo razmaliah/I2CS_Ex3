@@ -1,3 +1,4 @@
+package Algo;
 
 import exe.ex3.game.PacManAlgo;
 /**

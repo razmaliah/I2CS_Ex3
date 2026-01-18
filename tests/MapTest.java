@@ -1,9 +1,11 @@
 
+import Algo.Index2D;
+import Algo.Map;
+import Algo.Map2D;
+import Algo.Pixel2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import java.util.Arrays;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
