@@ -43,6 +43,8 @@ public class Ex3Algo implements PacManAlgo {
      */
     public int move(PacmanGame game) {
         _game = game;
+        updateAllData();
+
         if (_count == 0 || _count == 300) {
             int code = 0;
             int[][] board = game.getGame(0);
@@ -59,10 +61,6 @@ public class Ex3Algo implements PacManAlgo {
             int up = Game.UP, left = Game.LEFT, down = Game.DOWN, right = Game.RIGHT;
         }
         _count++;
-        updatePac();
-        updateGhosts();
-        updateMap();
-
         int distTCG = distToClosestGhost();
         if(distTCG < MAX_CLOSE_GHOST_DIST){
             if(_isEatable){
@@ -148,13 +146,20 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     /**
+     * Update all data: Pacman position, Ghosts positions and Map
+     */
+    public static void updateAllData(){
+        updatePac();
+        updateGhosts();
+        updateMap();
+    }
+
+    /**
      * Find the shortest path to the closest food (pink dot) from Pacman
      * @return the path to the closest food
      */
     public static Pixel2D[] closestPP() {
         Pixel2D[] ans = null;
-        updatePac();
-        updateMap();
         Pixel2D target = closestFood();
         ans = _map.shortestPath(_pacPos, target, OBS_VALUE);
         return ans;
@@ -166,8 +171,6 @@ public class Ex3Algo implements PacManAlgo {
      */
     public static Index2D closestFood() {
         Index2D ans = new Index2D(0,0);
-        updateMap();
-        updatePac();
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         allD.setPixel(ans,1000); // set an obstacle to large value
         for (int i = 0; i < _map.getWidth(); i++) {
@@ -213,10 +216,6 @@ public class Ex3Algo implements PacManAlgo {
      * @return array of distances from Pacman to each ghost (index corresponds to _ghostsPos index)
      */
     public static int[] ghostDist() {
-        updateMap();
-        updateGhosts();
-        updatePac();
-
         int[] dists = new int[_ghostsPos.length];
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         for (int i = 0; i < _ghostsPos.length; i++) {
@@ -262,9 +261,6 @@ public class Ex3Algo implements PacManAlgo {
      * @return - direction value (UP,DOWN,LEFT,RIGHT)
      */
     public static int huntClosestGhostDir(){
-        updatePac();
-        updateGhosts();
-        updateMap();
         int ind = indexClosestGhost();
         Pixel2D target = _ghostsPos[ind];
         if(target.getX()>8 && target.getX()<14 && target.getY()>10 && target.getY()<13){
@@ -278,8 +274,6 @@ public class Ex3Algo implements PacManAlgo {
 
     public static int distToClosestGreenDot(){
         int ans = 100;
-        updateMap();
-        updatePac();
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         for (int i = 0; i < _greenDots.length; i++) {
             if(_map.getPixel(_greenDots[i]) == POWER_VALUE){
@@ -293,8 +287,6 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     public int dirToClosestGreenDot(){
-        updateMap();
-        updatePac();
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         Pixel2D target = null;
         int ansDist = 100;
@@ -310,14 +302,12 @@ public class Ex3Algo implements PacManAlgo {
         Pixel2D start = _pacPos;
         Pixel2D[] SP = _map.shortestPath(start, target, OBS_VALUE);
         target = SP[1];
+        System.out.println(start);
+        System.out.println(target);
         return getDir(start,target);
     }
 
     public static Map2D combainedGhostDistMaps() {
-        updateMap();
-        updateGhosts();
-        updatePac();
-
         Map2D[] Maps = new Map2D[_ghostsPos.length];
         for (int i = 0; i < _ghostsPos.length; i++) {
             Maps[i] = _map.allDistance(_ghostsPos[i], OBS_VALUE);
@@ -340,9 +330,6 @@ public class Ex3Algo implements PacManAlgo {
     }
 
     public static int dirToRun(){
-        updateMap();
-        updatePac();
-        updateGhosts();
         int dirAns;
         Map2D combinedMap = combainedGhostDistMaps();
         Pixel2D start = _pacPos;
