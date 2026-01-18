@@ -82,11 +82,10 @@ public class AlgoTest {
     public void distToGhostTest() {
         _algo.updatePac();
         _algo.updateGhosts();
-        int [] distances = _algo.ghostDist();
-        int dist = _algo.distToClosestGhost(distances);
+        int dist = _algo.distToClosestGhost();
         assertEquals(3, dist);
 
-        int ind = _algo.indexClosestGhost(distances);
+        int ind = _algo.indexClosestGhost();
         assertEquals(0, ind);
     }
 

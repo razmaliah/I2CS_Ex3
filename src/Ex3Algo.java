@@ -63,7 +63,7 @@ public class Ex3Algo implements PacManAlgo {
         updateGhosts();
         updateMap();
 
-        int distTCG = distToClosestGhost(ghostDist());
+        int distTCG = distToClosestGhost();
         if(distTCG < MAX_CLOSE_GHOST_DIST){
             if(_isEatable){
                return huntClosestGhostDir();
@@ -111,6 +111,10 @@ public class Ex3Algo implements PacManAlgo {
 
     ///  ///////////////////////////////////// My methods  /////////////////////////////////////
 
+
+    /**
+     * Update Pacman position
+     */
     public static void updatePac() {
         String pos = _game.getPos(1);
         int x = Integer.parseInt(pos.split(",")[0]);
@@ -119,6 +123,9 @@ public class Ex3Algo implements PacManAlgo {
         _pacPos = p1;
     }
 
+    /**
+     * Update Ghosts positions and eatable status
+     */
     public static void updateGhosts() {
         GhostCL[] ghosts = _game.getGhosts(0);
         Pixel2D[] ghostPositions = new Pixel2D[ghosts.length];
@@ -131,12 +138,19 @@ public class Ex3Algo implements PacManAlgo {
         else{_isEatable = false;}
     }
 
+    /**
+     * Update Map (game data is updated every move)
+     */
     public static void updateMap(){
         if (_game == null){ return; }
         int[][] arr2D = _game.getGame(0);
         _map = new Map(arr2D);
     }
 
+    /**
+     * Find the shortest path to the closest food (pink dot) from Pacman
+     * @return the path to the closest food
+     */
     public static Pixel2D[] closestPP() {
         Pixel2D[] ans = null;
         updatePac();
@@ -146,6 +160,10 @@ public class Ex3Algo implements PacManAlgo {
         return ans;
     }
 
+    /**
+     * Find the closest food (pink dot) to Pacman
+     * @return the position of the closest food
+     */
     public static Index2D closestFood() {
         Index2D ans = new Index2D(0,0);
         updateMap();
@@ -163,6 +181,12 @@ public class Ex3Algo implements PacManAlgo {
         return ans;
     }
 
+    /**
+     * Get direction from start to next pixel
+     * @param start - starting pixel(Pacman position)
+     * @param next- destination pixel (next step in the path)
+     * @return - direction value (UP,DOWN,LEFT,RIGHT)
+     */
     public static int getDir(Pixel2D start, Pixel2D next) {
         if(next.getX() == start.getX() + 1 || start.getX() - next.getX() > 1){return Game.RIGHT;}
         if(next.getX() + 1 == start.getX() || next.getX() - start.getX() > 1){return Game.LEFT;}
@@ -171,6 +195,11 @@ public class Ex3Algo implements PacManAlgo {
         return Game.UP;
     }
 
+    /**
+     * extract ghost position from GhostCL and convert to Index2D
+     * @param g - GhostCL object
+     * @return - ghost position as Index2D
+     */
     public static Index2D ghostPos (GhostCL g){
         String pos = g.getPos(1);
         int x = Integer.parseInt(pos.split(",")[0]);
@@ -179,6 +208,10 @@ public class Ex3Algo implements PacManAlgo {
         return p1;
     }
 
+    /**
+     * Calculate distances from Pacman to all ghosts
+     * @return array of distances from Pacman to each ghost (index corresponds to _ghostsPos index)
+     */
     public static int[] ghostDist() {
         updateMap();
         updateGhosts();
@@ -198,7 +231,12 @@ public class Ex3Algo implements PacManAlgo {
         return dists;
     }
 
-    public static int indexClosestGhost(int[] dists) {
+    /**
+     * Find the index of the closest ghost from Pacman (in _ghostsPos array)
+     * @return - index of the closest ghost
+     */
+    public static int indexClosestGhost() {
+        int[] dists = ghostDist();
         if (dists == null || dists.length == 0) return -1;
         int minIndex = 0;
         for (int i = 1; i < dists.length; i++) {
@@ -209,16 +247,25 @@ public class Ex3Algo implements PacManAlgo {
         return minIndex;
     }
 
-    public static int distToClosestGhost(int[] dists){
-        int ind = indexClosestGhost(dists);
+    /**
+     * Calculate distance to the closest ghost from Pacman
+     * @return - distance to the closest ghost
+     */
+    public static int distToClosestGhost(){
+        int[] dists = ghostDist();
+        int ind = indexClosestGhost();
         return dists[ind];
     }
 
+    /**
+     * Find direction to hunt the closest ghost
+     * @return - direction value (UP,DOWN,LEFT,RIGHT)
+     */
     public static int huntClosestGhostDir(){
         updatePac();
         updateGhosts();
         updateMap();
-        int ind = indexClosestGhost(ghostDist());
+        int ind = indexClosestGhost();
         Pixel2D target = _ghostsPos[ind];
         if(target.getX()>8 && target.getX()<14 && target.getY()>10 && target.getY()<13){
            return dirToRun();
