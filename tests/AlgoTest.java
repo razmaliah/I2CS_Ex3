@@ -33,10 +33,23 @@ public class AlgoTest {
     }
 
     @Test
-    public void closestFoodTest() {
+    public void updateGhostTest() {
+        Pixel2D expected = new Index2D(11, 11);
+        Pixel2D g1 = _algo._ghostsPos[0];
+        assertTrue(g1.equals(expected));
+        assertFalse(_algo._isEatable);
+    }
+
+    @Test void updateMapTest() {
         int[][] mapArr = _game.getGame(1);
         Map2D map = new Map(mapArr);
-        Map2D alld = map.allDistance(_algo._pacPos, _algo.OBS_VALUE);
+        assertEquals(map, _algo._map);
+    }
+
+
+
+    @Test
+    public void closestFoodTest() {
         Index2D foodPos = _algo.closestFood();
         Index2D op1 = new Index2D(10, 14); // option 1
         Index2D op2 = new Index2D(12, 14); // option 2
@@ -63,14 +76,6 @@ public class AlgoTest {
         assertEquals(_algo.getDir(p3,p4), Game.LEFT);
     }
 
-    @Test
-    public void updateGhostTest() {
-        Pixel2D expected = new Index2D(11, 11);
-        Pixel2D g1 = _algo._ghostsPos[0];
-        assertTrue(g1.equals(expected));
-        assertFalse(_algo._isEatable);
-    }
-
 
     /**
      * includes ghostDist, distToClosestGhost ,indexClosestGhost
@@ -79,7 +84,6 @@ public class AlgoTest {
     public void distToGhostTest() {
         int dist = _algo.distToClosestGhost();
         assertEquals(3, dist);
-
         int ind = _algo.indexClosestGhost();
         assertEquals(0, ind);
     }
@@ -109,5 +113,16 @@ public class AlgoTest {
         _algo._pacPos = new Index2D(17,14); //move pacman to be closer to the top right green dot
         int dir = _algo.dirToClosestGreenDot();
         assertEquals(_game.UP, dir); //should go right to the closest green dot
+    }
+
+    @Test
+    public void dirToRunTest(){
+        Pixel2D g1 = new Index2D(9,14);
+        Pixel2D g2 = new Index2D(10,16);
+        Pixel2D g3 = new Index2D(15,16);
+        _algo._ghostsPos = new Pixel2D[]{g1, g2, g3};
+        int dir = _algo.dirToRun();
+        assertEquals(_game.RIGHT, dir); //should go right to run away from the closest, pacman is at (11,14)
+
     }
 }
