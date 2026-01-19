@@ -20,7 +20,7 @@ public class Ex3Algo implements PacManAlgo {
     public static Index2D _pacPos = null;
     public static Pixel2D[] _ghostsPos = null;
     public static boolean _isEatable = false;
-    private static final int MAX_CLOSE_GHOST_DIST = 12;
+    private static final int MAX_CLOSE_GHOST_DIST = 10;
     public static Pixel2D[] _greenDots = {new Index2D(3,5), new Index2D(3,18), new Index2D(19,5), new Index2D(19,18)};
 
     public Ex3Algo() {
@@ -270,6 +270,10 @@ public class Ex3Algo implements PacManAlgo {
         return getDir(start,target);
     }
 
+    /**
+     * Calculate distance to the closest green dot from Pacman
+     * @return - the distance to the closest green dot
+     */
     public static int distToClosestGreenDot(){
         int ans = 100;
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
@@ -284,6 +288,10 @@ public class Ex3Algo implements PacManAlgo {
         return ans;
     }
 
+    /**
+     * Find direction to the closest green dot
+     * @return - direction value (UP,DOWN,LEFT,RIGHT)
+     */
     public int dirToClosestGreenDot(){
         Map2D allD = _map.allDistance(_pacPos, OBS_VALUE);
         Pixel2D target = null;
@@ -305,6 +313,10 @@ public class Ex3Algo implements PacManAlgo {
         return getDir(start,target);
     }
 
+    /**
+     * Combine all ghost distance maps into one map with minimum distances in each pixel
+     * @return - combined distance map
+     */
     public static Map2D combainedGhostDistMaps() {
         Map2D[] Maps = new Map2D[_ghostsPos.length];
         for (int i = 0; i < _ghostsPos.length; i++) {
@@ -327,6 +339,10 @@ public class Ex3Algo implements PacManAlgo {
         return combinedMap;
     }
 
+    /**
+     * Find direction to run away from the closest ghost, based on combined ghosts distances map
+     * @return - direction value (UP,DOWN,LEFT,RIGHT)
+     */
     public static int dirToRun(){
         int dirAns;
         Map2D combinedMap = combainedGhostDistMaps();
