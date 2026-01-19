@@ -10,3 +10,4 @@ the algorithm is based on the BFS algorithm: (summarty of the algorithm steps; m
 3. if there is green dot (power that make the ghosts eatable) nearby and closer that the nearest ghost the Pacman will go to eat it and then will hunt.
 4. if there is no ghost nearby the Pacman will try to minimize the distance to the nearest food dot.
 
+<img width="895" height="1016" alt="best score" src="https://github.com/user-attachments/assets/5ffcc8d5-a5e2-4390-9713-2042c277cc45" />
