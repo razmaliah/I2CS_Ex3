@@ -170,6 +170,10 @@ public class PacManGame implements PacGame{
         System.out.println();
     }
 
+    private void moveGhosts(){
+
+    }
+
     static void main(String[] args) {
         PacManGame pc = new PacManGame(1,"rrr",1);
         pc.setupMap();
