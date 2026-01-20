@@ -20,7 +20,7 @@ public class Ex3Algo implements PacManAlgo {
     public static Index2D _pacPos = null;
     public static Pixel2D[] _ghostsPos = null;
     public static boolean _isEatable = false;
-    private static final int MAX_CLOSE_GHOST_DIST = 10;
+    private static final int MAX_CLOSE_GHOST_DIST = 3;
     public static Pixel2D[] _greenDots = {new Index2D(3,5), new Index2D(3,18), new Index2D(19,5), new Index2D(19,18)};
 
     public Ex3Algo() {
