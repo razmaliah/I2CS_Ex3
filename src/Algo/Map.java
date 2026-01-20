@@ -585,7 +585,7 @@ public class Map implements Map2D, Serializable{
     /**
      * print the map
      */
-    private void printMap(){
+    public void printMap(){
         for(int i=0; i< this.getWidth(); i++){
             for(int j=0; j< this.getHeight(); j++){
                 System.out.print(this.getPixel(i,j)+" ");

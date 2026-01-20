@@ -5,7 +5,7 @@ import exe.ex3.game.Game;
 
 public interface PacGame {
 
-    void init(int level, String name, int dt);
+    void init(int level, String username, int dt);
 
     void play();
 
