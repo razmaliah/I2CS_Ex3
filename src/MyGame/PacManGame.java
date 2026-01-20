@@ -171,7 +171,9 @@ public class PacManGame implements PacGame{
     }
 
     private void moveGhosts(){
-
+        for(int i=0;i<_ghosts.length;i++){
+            _ghosts[i].moveRandom(_gameMap,OBS_COLOR);
+        }
     }
 
     static void main(String[] args) {
